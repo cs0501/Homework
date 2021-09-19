@@ -39,9 +39,9 @@ int main(){
                 li++;
             }
             else if(buf[i] == '/'&&buf[i+1] == '/') break;  //当一行中出现注释时，直接跳过这一行
-            else if(buf[i] == '"') senten_jd++;           //当出现引号时，改变判断状态
-            else if(buf[i] == '/'&&buf[i+1] == '*'&&annot_jd == 0) annot_jd = 1;  //当annot_jd为1时进入长注释
-            else if(buf[i] == '*'&&buf[i+1] == '/'&&annot_jd == 1) annot_jd = 0;  //当annot_jd为0时离开长注释
+            else if(buf[i] == '"') {senten_jd++; li =0;}             //当出现引号时，改变判断状态
+            else if(buf[i] == '/'&&buf[i+1] == '*'&&annot_jd == 0) {annot_jd = 1; li = 0;}    //当annot_jd为1时进入长注释
+            else if(buf[i] == '*'&&buf[i+1] == '/'&&annot_jd == 1) {annot_jd = 0; li = 0;}    //当annot_jd为0时离开长注释
             else{
                 word = word_.substr(0,li);
                 if(pairing(word) >= 0&&senten_jd%2 == 0&&annot_jd == 0){    
