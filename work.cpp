@@ -17,8 +17,6 @@ int pairing(string target); //配对成功则返回该关键字的号码，配�
 
 int main(){
     int total_num = 0;
-    int senten_jd = 0;      //判断是否处于语句中，为奇数时表示在语句中，不需要识别关键字
-    int annot_jd = 0;       //用于定义是否处于长注释中
     char buf[MAX_LINE];  /*缓冲区*/
     FILE *fp;            /*文件指针*/
     int len,n,li;             /*所读到的字符下标,li记录单词的长度*/
@@ -38,41 +36,23 @@ int main(){
                 word_[li] = buf[i];
                 li++;
             }
-            else if(buf[i] == '/'&&buf[i+1] == '/') break;  //当一行中出现注释时，直接跳过这一行
-            else if(buf[i] == '"') {senten_jd++; li =0;}             //当出现引号时，改变判断状态
-            else if(buf[i] == '/'&&buf[i+1] == '*'&&annot_jd == 0) {annot_jd = 1; li = 0;}    //当annot_jd为1时进入长注释
-            else if(buf[i] == '*'&&buf[i+1] == '/'&&annot_jd == 1) {annot_jd = 0; li = 0;}    //当annot_jd为0时离开长注释
             else{
                 word = word_.substr(0,li);
-                if(pairing(word) >= 0&&senten_jd%2 == 0&&annot_jd == 0){    
+                if(pairing(word) >= 0){    
                     cout<<word<<endl;
                     total_num++;    
                 }
                 li = 0;
             }
         }
-        /*word = word_.substr(0,li);
+        word = word_.substr(0,li);
         if(pairing(word)>=0){    
             cout<<word<<endl;
             total_num++;    
-        }*/
+        }
     }
     cout<<total_num<<endl;
     system("pause");
     return 0;
 }
 
-int pairing(string target){
-    int head = 0,tail = 31,k;
-    while(head <= tail){
-        k = (head + tail)/2;
-        if(target.compare(stand[k]) < 0){
-            tail = k-1;
-        }
-        else if(target.compare(stand[k]) > 0){
-            head = k+1;
-        }
-        else return k;
-    }
-    return -1;
-}
