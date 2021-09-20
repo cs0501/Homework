@@ -34,7 +34,7 @@ int main(){
     int len,n,li;             /*所读到的字符下标,li记录单词的长度*/
     string word_ = "abcdefgh";  //代码中读取进的格式为char，设置word_ 用于转存
     string word;        //用于存储所要进行判断的字符串
-    if((fp = fopen("D:\\VSCode\\test1.txt","r")) == NULL){
+    if((fp = fopen("D:\\VSCode\\test.txt","r")) == NULL){
         perror("fail to read");
         exit (1) ;
     }
@@ -67,7 +67,6 @@ int main(){
                 if_jd.pop();    
             } 
             else{
-                if(buf[i] == '{') if_jd.push("{");
                 word = word_.substr(0,li);
                 pairs = pairing(word);
                 if(pairs >= 0 && senten_jd%2 == 0 && annot_jd == 0){    
@@ -79,23 +78,32 @@ int main(){
                         }    
                     }
                     else if(pairs == 2) case_num++;             //遇到 case 时计数
-                    else if(pairs == 15) if_jd.push("if");      //遇到 if 时将 if 入栈
+                    else if(pairs == 15){ if_jd.push("if"); cout<<"IN  "<<if_jd.top()<<endl;}      //遇到 if 时将 if 入栈
                     else if(pairs == 9){
-                        if(!(buf[i] == ' ' && buf[i + 1] == 'i' && buf[i + 2] == 'f')){
+                        if(buf[i] == ' ' && buf[i+1] == 'i' && buf[i+2] == 'f'){
+                            total_num++;
+                            buf[i] = buf[i+1] = ' ';
+                            if(if_jd.top() == "if") {
+                                cout<<"OUT  "<<if_jd.top()<<endl;
+                                if_jd.pop();
+                            }
+                        }
+                        else{
                             else_num++;
                             cout<<"else_num  "<<else_num<<endl;
-                            if(if_jd.top() == "if"){ 
+                            if(if_jd.top() == "if"){
                                 if_else++;
                                 cout<<"if_else  "<<if_else<<endl;
+                                cout<<"OUT  "<<if_jd.top()<<endl;
                                 if_jd.pop();
-                            } 
+                                
+                            }
                         }
-                        else if(if_jd.top() == "if") if_jd.pop();
                     }
-                    cout<<word<<endl;
+                    //cout<<word<<endl;
                     total_num++;    
                 }
-                
+                if(buf[i] == '{') {if_jd.push("{");cout<<"IN  "<<if_jd.top()<<endl;}
                 li = 0;
             }
         }
